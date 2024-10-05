@@ -8,6 +8,7 @@ import Colors from "../constants/Colors";
 
 export default function Page() {
   const [assets] = useAssets([require("@/assets/videos/intro.mp4")]);
+
   return (
     <View style={styles.container}>
       {assets && (
