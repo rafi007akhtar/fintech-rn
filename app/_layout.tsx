@@ -9,6 +9,41 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../constants/Colors";
 import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as SecureStore from "expo-secure-store";
+import { TokenCache } from "@clerk/clerk-expo/dist/cache/types";
+import { ClerkProvider } from "@clerk/clerk-expo";
+
+const tokenCache: TokenCache = {
+  async getToken(key: string) {
+    try {
+      const item = await SecureStore.getItemAsync(key);
+      if (item) {
+        console.log(`${key} was used`);
+      } else {
+        console.log("No values stored under key: " + key);
+      }
+      return item;
+    } catch (error) {
+      console.error("SecureStore get item error: ", error);
+      await SecureStore.deleteItemAsync(key);
+      return null;
+    }
+  },
+  async saveToken(key: string, value: string) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
+
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!; // NOTE: the ! is needed to establish that the key is set
+if (!publishableKey) {
+  throw new Error(
+    "Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env"
+  );
+}
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -81,8 +116,10 @@ function InitalLayout() {
 function RootLayoutNav() {
   return (
     <>
-      <StatusBar style="light" />
-      <InitalLayout />
+      <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+        <StatusBar style="light" />
+        <InitalLayout />
+      </ClerkProvider>
     </>
   );
 }
