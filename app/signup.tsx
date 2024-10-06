@@ -5,17 +5,39 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { defaultStyles } from "../constants/Styles";
 import Colors from "../constants/Colors";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { useSignUp } from "@clerk/clerk-expo";
+
+const initContryCode = "+91";
 
 export default function SignUp() {
-  const [countryCode, setCountryCode] = useState("+91");
+  const [countryCode, setCountryCode] = useState(initContryCode);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [fullNumber, setFullNumber] = useState(initContryCode);
 
-  // TODO: implement this later, when integrating with Clerk
-  async function onSignup() {}
+  useEffect(() => {
+    setFullNumber(`${countryCode}${phoneNumber}`);
+  }, [countryCode, phoneNumber]);
+
+  const router = useRouter();
+  const { signUp } = useSignUp();
+
+  async function onSignup() {
+    try {
+      await signUp?.create({
+        phoneNumber: fullNumber,
+      });
+      router.push({
+        pathname: "/[phone]",
+        params: { phone: fullNumber },
+      });
+    } catch (e) {
+      console.error("Unable to navigate to verify page:", e);
+    }
+  }
 
   return (
     <View style={[defaultStyles.container, styles.container]}>
