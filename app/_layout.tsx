@@ -1,9 +1,14 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Colors from "../constants/Colors";
+import { TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -37,10 +42,47 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-function RootLayoutNav() {
+function InitalLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="signup" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="login"
+        options={{
+          title: "",
+          headerBackTitle: "",
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: Colors.background },
+          headerRight: () => (
+            <Link href="/help" asChild>
+              <TouchableOpacity>
+                <Ionicons
+                  name="help-circle-outline"
+                  size={34}
+                  color={Colors.dark}
+                />
+              </TouchableOpacity>
+            </Link>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="help"
+        options={{
+          title: "Help",
+          presentation: "modal",
+        }}
+      />
     </Stack>
+  );
+}
+
+function RootLayoutNav() {
+  return (
+    <>
+      <StatusBar style="dark" />
+      <InitalLayout />
+    </>
   );
 }
