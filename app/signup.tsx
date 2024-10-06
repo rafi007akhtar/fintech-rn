@@ -30,6 +30,7 @@ export default function SignUp() {
       await signUp?.create({
         phoneNumber: fullNumber,
       });
+      signUp?.preparePhoneNumberVerification();
       router.push({
         pathname: "/[phone]",
         params: { phone: fullNumber },
