@@ -9,7 +9,7 @@ import React from "react";
 
 export default function Page() {
   const video = React.useRef(null);
-  const [assets] = useAssets([require("@/assets/videos/intro_4.mp4")]);
+  const [assets] = useAssets([require("@/assets/videos/intro_5.mp4")]);
 
   if (assets) {
     // assets[0].height = 500;
@@ -33,7 +33,6 @@ export default function Page() {
           resizeMode={ResizeMode.COVER}
         />
       )}
-      {!assets && <Text>Loading video...</Text>}
 
       <View style={styles.header}>
         <Text style={styles.headerText}>
@@ -83,6 +82,10 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: "900",
     textTransform: "uppercase",
+    color: "#fff",
+    textShadowColor: "grey",
+    textShadowRadius: 8,
+    textShadowOffset: { width: 2, height: 2 },
   },
   buttons: {
     flexDirection: "row",

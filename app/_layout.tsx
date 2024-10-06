@@ -81,7 +81,7 @@ function InitalLayout() {
 function RootLayoutNav() {
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <InitalLayout />
     </>
   );
