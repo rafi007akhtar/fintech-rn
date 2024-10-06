@@ -1,7 +1,14 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
 import { defaultStyles } from "../constants/Styles";
 import Colors from "../constants/Colors";
+import { Link } from "expo-router";
 
 export default function SignUp() {
   const [countryCode, setCountryCode] = useState("+91");
@@ -11,7 +18,7 @@ export default function SignUp() {
   async function onSignup() {}
 
   return (
-    <View style={[defaultStyles.container]}>
+    <View style={[defaultStyles.container, styles.container]}>
       <Text style={[defaultStyles.header]}>Let's get started!</Text>
       <Text style={defaultStyles.descriptionText}>
         Enter your phone number. We will send you a confirmation code there.
@@ -34,11 +41,35 @@ export default function SignUp() {
           onChangeText={setPhoneNumber}
         />
       </View>
+
+      <Link href="/login" replace asChild>
+        <TouchableOpacity>
+          <Text style={defaultStyles.textLink}>
+            Already have an account? Log in.
+          </Text>
+        </TouchableOpacity>
+      </Link>
+
+      <View style={{ flex: 1 }}></View>
+
+      <TouchableOpacity
+        style={[
+          defaultStyles.pillButton,
+          styles.signUpBtn,
+          phoneNumber.length ? styles.enabled : styles.disabled,
+        ]}
+        onPress={onSignup}
+      >
+        <Text style={[defaultStyles.buttonText]}>Sign Up!</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+  },
   inputContainer: {
     marginVertical: 40,
     flexDirection: "row",
@@ -49,5 +80,14 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     fontSize: 20,
     marginRight: 10,
+  },
+  signUpBtn: {
+    marginVertical: 20,
+  },
+  enabled: {
+    backgroundColor: Colors.primary,
+  },
+  disabled: {
+    backgroundColor: Colors.primaryMuted,
   },
 });
