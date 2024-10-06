@@ -5,19 +5,31 @@ import { View, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { defaultStyles } from "../constants/Styles";
 import Colors from "../constants/Colors";
+import React from "react";
 
 export default function Page() {
-  const [assets] = useAssets([require("@/assets/videos/intro.mp4")]);
+  const video = React.useRef(null);
+  const [assets] = useAssets([require("@/assets/videos/intro_4.mp4")]);
+
+  if (assets) {
+    // assets[0].height = 500;
+    // assets[0].width = 500;
+    console.log("video assets", assets[0]);
+  }
 
   return (
     <View style={styles.container}>
       {assets && (
         <Video
-          source={{ uri: assets[0].uri }}
+          ref={video}
+          source={{
+            uri: assets[0].uri,
+          }}
           style={styles.video}
           isMuted
           isLooping
           shouldPlay
+          videoStyle={{ backgroundColor: "grey" }}
           resizeMode={ResizeMode.COVER}
         />
       )}
@@ -64,8 +76,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   header: {
-    marginTop: 80,
     padding: 20,
+    marginTop: 40,
   },
   headerText: {
     fontSize: 36,
