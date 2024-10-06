@@ -11,12 +11,6 @@ export default function Page() {
   const video = React.useRef(null);
   const [assets] = useAssets([require("@/assets/videos/intro_5.mp4")]);
 
-  if (assets) {
-    // assets[0].height = 500;
-    // assets[0].width = 500;
-    console.log("video assets", assets[0]);
-  }
-
   return (
     <View style={styles.container}>
       {assets && (
