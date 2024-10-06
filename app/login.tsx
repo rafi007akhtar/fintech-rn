@@ -4,11 +4,14 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { defaultStyles } from "../constants/Styles";
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { isClerkAPIResponseError, useSignIn } from "@clerk/clerk-expo";
 
 enum LoginType {
   Phone,
@@ -17,12 +20,52 @@ enum LoginType {
   Apple,
 }
 
-export default function Login() {
-  const [countryCode, setCountryCode] = useState("+91");
-  const [phoneNumber, setPhoneNumber] = useState("");
+const initContryCode = "+91";
 
-  // TODO: implement this later, when integrating with Clerk
-  async function onLogin(loginType: LoginType) {}
+export default function Login() {
+  const [countryCode, setCountryCode] = useState(initContryCode);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [fullNumber, setFullNumber] = useState(initContryCode);
+
+  const router = useRouter();
+  const { signIn } = useSignIn();
+
+  useEffect(() => {
+    setFullNumber(`${countryCode}${phoneNumber}`);
+  }, [countryCode, phoneNumber]);
+
+  async function onLogin(loginType: LoginType) {
+    if (loginType === LoginType.Phone) {
+      try {
+        const { supportedFirstFactors } = await signIn!.create({
+          identifier: fullNumber,
+        });
+
+        const firstPhoneFactor = supportedFirstFactors?.find(
+          (factor) => factor.strategy === "phone_code"
+        );
+        const phoneNumberId = firstPhoneFactor?.phoneNumberId;
+
+        await signIn!.prepareFirstFactor({
+          strategy: "phone_code",
+          phoneNumberId: phoneNumberId!,
+        });
+
+        router.push({
+          pathname: "/[phone]",
+          params: {
+            phone: fullNumber,
+            signin: "true",
+          },
+        });
+      } catch (err) {
+        console.log("error", JSON.stringify(err, null, 2));
+        if (isClerkAPIResponseError(err)) {
+          Alert.alert("Error", err.errors[0].message);
+        }
+      }
+    }
+  }
 
   return (
     <View style={[defaultStyles.container]}>
