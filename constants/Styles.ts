@@ -58,4 +58,12 @@ export const defaultStyles = StyleSheet.create({
     borderRadius: 16,
     gap: 20,
   },
+  circle: {
+    width: 60,
+    height: 60,
+    backgroundColor: Colors.lightGray,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
+  },
 });
