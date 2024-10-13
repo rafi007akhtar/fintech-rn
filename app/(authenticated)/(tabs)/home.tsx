@@ -7,8 +7,6 @@ import { useBalanceStore } from "../../../store/balanceStore";
 import { defaultStyles } from "../../../constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
 
-const tempBalc = 100;
-
 export default function Home() {
   const { balance, clearBalance, runTransaction, transactions } =
     useBalanceStore();
