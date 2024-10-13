@@ -1,17 +1,18 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { Link, Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../constants/Colors";
-import { TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
 import { TokenCache } from "@clerk/clerk-expo/dist/cache/types";
-import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
+import { ClerkProvider, useAuth, useSession } from "@clerk/clerk-expo";
+import { verification } from "../constants/Verification";
 
 const tokenCache: TokenCache = {
   async getToken(key: string) {
@@ -53,6 +54,10 @@ export {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+export function Loading() {
+  return <Text>Loading ...</Text>;
+}
+
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -71,7 +76,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return <Loading />;
   }
 
   return <RootLayoutNav />;
@@ -80,10 +85,29 @@ export default function RootLayout() {
 function InitalLayout() {
   const router = useRouter();
   const { isSignedIn, isLoaded } = useAuth();
+  const segments = useSegments();
+  const userSession = useSession();
 
   useEffect(() => {
     console.log("isSignedIn: ", isSignedIn);
+
+    const inAuthGroup = segments[0] === "(authenticated)";
+    if (isSignedIn && !inAuthGroup) {
+      router.replace<any>("/(authenticated)/(tabs)/home");
+    } else if (!isSignedIn) {
+      router.replace("/");
+    }
+
+    return () => {
+      if (verification.REMOVE_SESSION_ON_EXIT) {
+        userSession.session?.remove();
+      }
+    };
   }, [isSignedIn]);
+
+  if (!isLoaded) {
+    return <Loading />;
+  }
 
   return (
     <Stack>
@@ -116,6 +140,11 @@ function InitalLayout() {
           title: "Help",
           presentation: "modal",
         }}
+      />
+
+      <Stack.Screen
+        name="(authenticated)/(tabs)"
+        options={{ headerShown: false }}
       />
     </Stack>
   );
