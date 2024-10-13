@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../constants/Colors";
-import { Text, TouchableOpacity } from "react-native";
+import { Alert, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
 import { TokenCache } from "@clerk/clerk-expo/dist/cache/types";
@@ -90,12 +90,19 @@ function InitalLayout() {
 
   useEffect(() => {
     console.log("isSignedIn: ", isSignedIn);
+    console.log("segments", segments);
 
     const inAuthGroup = segments[0] === "(authenticated)";
-    if (isSignedIn && !inAuthGroup) {
-      router.replace<any>("/(authenticated)/(tabs)/home");
-    } else if (!isSignedIn) {
-      router.replace("/");
+    const inRootLayout = segments[0] === "";
+
+    try {
+      if (isSignedIn && !inAuthGroup && !inRootLayout) {
+        router.replace<any>("/(authenticated)/(tabs)/home");
+      } else if (!isSignedIn) {
+        router.replace("/");
+      }
+    } catch (e: any) {
+      console.warn(e.toString());
     }
 
     return () => {
