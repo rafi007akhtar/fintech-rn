@@ -10,7 +10,7 @@ export interface Transaction {
 }
 
 export interface BalanceStore {
-  transations: Array<Transaction>;
+  transactions: Array<Transaction>;
   runTransaction: (transaction: Transaction) => void;
   balance: () => number;
   clearBalance: () => void;
@@ -19,13 +19,15 @@ export interface BalanceStore {
 export const useBalanceStore = create<BalanceStore>()(
   persist(
     (set, get) => ({
-      transations: [],
+      transactions: [] as Array<Transaction>,
       runTransaction: (transaction: Transaction) => {
-        set((state) => ({ transations: [...state.transations, transaction] }));
+        set((state) => ({
+          transactions: [transaction, ...state.transactions],
+        }));
       },
-      balance: () => 0,
+      balance: () => get().transactions.reduce((acc, t) => acc + t.amount, 0),
       clearBalance: () => {
-        set({ transations: [] });
+        set({ transactions: [] });
       },
     }),
     {
