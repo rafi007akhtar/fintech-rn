@@ -2,6 +2,7 @@ import { View, Text, ScrollView, StyleSheet, Button } from "react-native";
 import React from "react";
 import Colors from "../../../constants/Colors";
 import RoundBtn from "../../../components/RoundBtn";
+import Dropdown from "../../../components/Dropdown";
 
 const tempBalc = 100;
 
@@ -23,9 +24,7 @@ export default function Home() {
         </RoundBtn>
         <RoundBtn icon="refresh">Exchange</RoundBtn>
         <RoundBtn icon="list">Details</RoundBtn>
-
-        {/* TODO: turn this into a dropdown */}
-        <RoundBtn icon="add">More</RoundBtn>
+        <Dropdown />
       </View>
     </ScrollView>
   );
