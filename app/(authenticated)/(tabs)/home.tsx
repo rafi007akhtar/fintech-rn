@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, Button } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import React from "react";
 import Colors from "../../../constants/Colors";
 import RoundBtn from "../../../components/RoundBtn";
@@ -6,6 +6,7 @@ import Dropdown from "../../../components/Dropdown";
 import { useBalanceStore } from "../../../store/balanceStore";
 import { defaultStyles } from "../../../constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
+import WidgetList from "../../../components/SortableList/WidgetList";
 
 export default function Home() {
   const { balance, clearBalance, runTransaction, transactions } =
@@ -69,6 +70,9 @@ export default function Home() {
           </View>
         )}
       </View>
+
+      <Text style={defaultStyles.sectionHeader}>Widgets</Text>
+      <WidgetList />
     </ScrollView>
   );
 }
