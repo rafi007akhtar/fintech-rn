@@ -7,10 +7,12 @@ import { useBalanceStore } from "../../../store/balanceStore";
 import { defaultStyles } from "../../../constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
 import WidgetList from "../../../components/SortableList/WidgetList";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 export default function Home() {
   const { balance, clearBalance, runTransaction, transactions } =
     useBalanceStore();
+  const headerHeight = useHeaderHeight();
 
   function onAddMoney() {
     runTransaction({
@@ -22,7 +24,12 @@ export default function Home() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{
+        paddingTop: headerHeight,
+      }}
+    >
       <View style={styles.account}>
         <View style={styles.row}>
           <Text style={styles.currency}>₹</Text>
@@ -73,6 +80,7 @@ export default function Home() {
 
       <Text style={defaultStyles.sectionHeader}>Widgets</Text>
       <WidgetList />
+      <View style={styles.spacer}></View>
     </ScrollView>
   );
 }
@@ -126,5 +134,8 @@ const styles = StyleSheet.create({
   transactionDate: {
     fontSize: 12,
     color: Colors.gray,
+  },
+  spacer: {
+    marginVertical: 20,
   },
 });
