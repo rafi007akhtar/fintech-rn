@@ -161,6 +161,18 @@ function InitalLayout() {
         name="(authenticated)/(tabs)"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="(authenticated)/crypto/[id]"
+        options={{
+          title: "",
+          headerTransparent: true,
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons name="arrow-back" size={34} color={Colors.dark} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
     </Stack>
   );
 }
