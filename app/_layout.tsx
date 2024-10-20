@@ -5,14 +5,16 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../constants/Colors";
-import { Alert, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
 import { TokenCache } from "@clerk/clerk-expo/dist/cache/types";
 import { ClerkProvider, useAuth, useSession } from "@clerk/clerk-expo";
 import { verification } from "../constants/Verification";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const client = new QueryClient();
 
 const tokenCache: TokenCache = {
   async getToken(key: string) {
@@ -89,6 +91,10 @@ function InitalLayout() {
   const userSession = useSession();
 
   useEffect(() => {
+    console.log("currently on:", segments);
+  }, [segments]);
+
+  useEffect(() => {
     console.log("isSignedIn: ", isSignedIn);
     console.log("segments", segments);
 
@@ -96,8 +102,10 @@ function InitalLayout() {
     const inRootLayout = segments[0] === "";
 
     try {
+      console.log({ isSignedIn, inAuthGroup, inRootLayout });
       if (isSignedIn && !inAuthGroup && !inRootLayout) {
-        router.replace<any>("/(authenticated)/(tabs)/home");
+        // router.replace<any>("/(authenticated)/(tabs)/home"); // TODO: uncomment after doing other navs
+        router.replace<any>("/(authenticated)/(tabs)/crypto"); // TODO: delete once this nav is done
       } else if (!isSignedIn) {
         router.replace("/");
       }
@@ -161,8 +169,10 @@ function RootLayoutNav() {
   return (
     <>
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-        <StatusBar style="light" />
-        <InitalLayout />
+        <QueryClientProvider client={client}>
+          <StatusBar style="light" />
+          <InitalLayout />
+        </QueryClientProvider>
       </ClerkProvider>
     </>
   );
