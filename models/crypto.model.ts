@@ -2,62 +2,48 @@ export interface Currency {
   id: number;
   name: string;
   symbol: string;
-  category: string;
-  description: string;
   slug: string;
-  logo: string;
-  subreddit: string;
-  notice: string;
-  tags: string[];
-  "tag-names": string[];
-  "tag-groups": string[];
-  urls: Urls;
-  platform: Platform;
+  num_market_pairs: number;
   date_added: string;
-  twitter_username: string;
-  is_hidden: number;
-  date_launched: null;
-  contract_address: Contractaddress[];
-  self_reported_circulating_supply: null;
-  self_reported_tags: null;
-  self_reported_market_cap: null;
+  tags: string[];
+  max_supply: null | number;
+  circulating_supply: number;
+  total_supply: number;
   infinite_supply: boolean;
+  platform: Platform | null;
+  cmc_rank: number;
+  self_reported_circulating_supply: null;
+  self_reported_market_cap: null;
+  tvl_ratio: null;
+  last_updated: string;
+  quote: Quote;
 }
 
-interface Contractaddress {
-  contract_address: string;
-  platform: Platform2;
+interface Quote {
+  INR: INR;
 }
 
-interface Platform2 {
-  name: string;
-  coin: Coin;
-}
-
-interface Coin {
-  id: string;
-  name: string;
-  symbol: string;
-  slug: string;
+interface INR {
+  price: number;
+  volume_24h: number;
+  volume_change_24h: number;
+  percent_change_1h: number;
+  percent_change_24h: number;
+  percent_change_7d: number;
+  percent_change_30d: number;
+  percent_change_60d: number;
+  percent_change_90d: number;
+  market_cap: number;
+  market_cap_dominance: number;
+  fully_diluted_market_cap: number;
+  tvl: null;
+  last_updated: string;
 }
 
 interface Platform {
-  id: string;
+  id: number;
   name: string;
-  slug: string;
   symbol: string;
+  slug: string;
   token_address: string;
-}
-
-interface Urls {
-  website: string[];
-  twitter: string[];
-  message_board: string[];
-  chat: string[];
-  facebook: any[];
-  explorer: string[];
-  reddit: string[];
-  technical_doc: any[];
-  source_code: string[];
-  announcement: string[];
 }
