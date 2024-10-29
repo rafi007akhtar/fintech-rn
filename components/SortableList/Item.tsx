@@ -160,14 +160,11 @@ const Item = ({
   });
   return (
     <Animated.View style={style}>
-      {/* NOTE: put the PanGestureHandler within GestureHandlerRootView for ANYTHING to work */}
-      <GestureHandlerRootView>
-        <PanGestureHandler enabled={editing} onGestureEvent={onGestureEvent}>
-          <Animated.View style={StyleSheet.absoluteFill}>
-            {children}
-          </Animated.View>
-        </PanGestureHandler>
-      </GestureHandlerRootView>
+      <PanGestureHandler enabled={editing} onGestureEvent={onGestureEvent}>
+        <Animated.View style={StyleSheet.absoluteFill}>
+          {children}
+        </Animated.View>
+      </PanGestureHandler>
     </Animated.View>
   );
 };

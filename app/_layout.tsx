@@ -13,6 +13,7 @@ import { TokenCache } from "@clerk/clerk-expo/dist/cache/types";
 import { ClerkProvider, useAuth, useSession } from "@clerk/clerk-expo";
 import { verification } from "../constants/Verification";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const client = new QueryClient();
 
@@ -182,8 +183,10 @@ function RootLayoutNav() {
     <>
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
         <QueryClientProvider client={client}>
-          <StatusBar style="light" />
-          <InitalLayout />
+          <GestureHandlerRootView>
+            <StatusBar style="light" />
+            <InitalLayout />
+          </GestureHandlerRootView>
         </QueryClientProvider>
       </ClerkProvider>
     </>
