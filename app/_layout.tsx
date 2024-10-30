@@ -14,6 +14,7 @@ import { ClerkProvider, useAuth, useSession } from "@clerk/clerk-expo";
 import { verification } from "../constants/Verification";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { UserInactivityProvider } from "../context/UserInactivity";
 
 const client = new QueryClient();
 
@@ -174,6 +175,13 @@ function InitalLayout() {
           ),
         }}
       />
+      <Stack.Screen
+        name="(authenticated)/(modals)/lock"
+        options={{
+          headerShown: false,
+          animation: "none",
+        }}
+      ></Stack.Screen>
     </Stack>
   );
 }
@@ -183,10 +191,12 @@ function RootLayoutNav() {
     <>
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
         <QueryClientProvider client={client}>
-          <GestureHandlerRootView>
-            <StatusBar style="light" />
-            <InitalLayout />
-          </GestureHandlerRootView>
+          <UserInactivityProvider>
+            <GestureHandlerRootView>
+              <StatusBar style="light" />
+              <InitalLayout />
+            </GestureHandlerRootView>
+          </UserInactivityProvider>
         </QueryClientProvider>
       </ClerkProvider>
     </>
