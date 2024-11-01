@@ -6,7 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import Colors from "../constants/Colors";
-import { Text, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
 import { TokenCache } from "@clerk/clerk-expo/dist/cache/types";
@@ -59,7 +59,11 @@ export {
 SplashScreen.preventAutoHideAsync();
 
 export function Loading() {
-  return <Text>Loading ...</Text>;
+  return (
+    <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+      <ActivityIndicator size="large" color={Colors.primary} />
+    </View>
+  );
 }
 
 export default function RootLayout() {
@@ -109,7 +113,10 @@ function InitalLayout() {
         // router.replace<any>("/(authenticated)/(tabs)/home"); // TODO: uncomment after doing other navs
         router.replace<any>("/(authenticated)/(tabs)/crypto"); // TODO: delete once this nav is done
       } else if (!isSignedIn) {
+        // TODO: rewrite this to default to home page once Clerk limit resets in the next month
         router.replace("/");
+
+        // router.replace("/(authenticated)/(modals)/lock"); // TODO: delete once this nav is done
       }
     } catch (e: any) {
       console.warn(e.toString());
