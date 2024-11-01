@@ -7,12 +7,30 @@ import * as Haptics from "expo-haptics";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as LocalAuthentication from "expo-local-authentication";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
+
+const ANIMATE_OFFSET = 20;
+const ANIMATE_TIME_MS = 80;
+const UNLOCK_CODE = "123456"; // NOTE: in a real application, this shouldn't be hard-coded like this
 
 export default function Lock() {
   const { user } = useUser();
   const [code, setCode] = useState<number[]>([]);
-  const [firstName, setFirstName] = useState(user?.firstName || "user");
+  const [firstName] = useState(user?.firstName || "user");
   const router = useRouter();
+
+  const offset = useSharedValue(0);
+  const style = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: offset.value }],
+    };
+  });
 
   const codeBoxes = Array(6).fill(0);
 
@@ -47,19 +65,31 @@ export default function Lock() {
   }
 
   function unlockNavigation() {
-    router.replace("/(authenticated)/(tabs)/crypto"); // TODO: change to home
+    router.replace("/(authenticated)/(tabs)/home");
   }
 
   function unlockError() {
-    // TODO: show error
+    offset.value = withSequence(
+      withTiming(-ANIMATE_OFFSET, { duration: ANIMATE_TIME_MS / 2 }),
+      withRepeat(
+        withTiming(ANIMATE_OFFSET, { duration: ANIMATE_TIME_MS }),
+        4,
+        true
+      ),
+      withTiming(0, { duration: ANIMATE_TIME_MS / 2 })
+    );
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     setCode([]);
   }
 
   useEffect(() => {
+    performBiometricAuth();
+  }, []);
+
+  useEffect(() => {
     if (code.length === 6) {
       console.log({ code });
-      if (code.join("") === "111111") {
+      if (code.join("") === UNLOCK_CODE) {
         setCode([]);
         unlockNavigation();
       } else {
@@ -71,7 +101,7 @@ export default function Lock() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.greeting}>Welcome back, {firstName}.</Text>
-      <View style={[styles.codeView]}>
+      <Animated.View style={[styles.codeView, style]}>
         {codeBoxes.map((_, ind) => (
           <View
             key={ind}
@@ -84,7 +114,7 @@ export default function Lock() {
             ]}
           ></View>
         ))}
-      </View>
+      </Animated.View>
 
       <View style={[styles.numbersView]}>
         {codeNumbers.map((numRow, ind) => (
