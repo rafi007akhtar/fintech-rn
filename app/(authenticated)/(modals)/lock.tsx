@@ -6,6 +6,7 @@ import Colors from "../../../constants/Colors";
 import * as Haptics from "expo-haptics";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import * as LocalAuthentication from "expo-local-authentication";
 
 export default function Lock() {
   const { user } = useUser();
@@ -27,6 +28,8 @@ export default function Lock() {
     if (typeof num === "string") {
       if (num === "back") {
         setCode(code.slice(0, -1));
+      } else if (num === "face") {
+        performBiometricAuth();
       }
       return;
     }
@@ -34,16 +37,33 @@ export default function Lock() {
     setCode([...code, num]);
   }
 
+  async function performBiometricAuth() {
+    const { success } = await LocalAuthentication.authenticateAsync();
+    if (success) {
+      unlockNavigation();
+    } else {
+      unlockError();
+    }
+  }
+
+  function unlockNavigation() {
+    router.replace("/(authenticated)/(tabs)/crypto"); // TODO: change to home
+  }
+
+  function unlockError() {
+    // TODO: show error
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    setCode([]);
+  }
+
   useEffect(() => {
     if (code.length === 6) {
       console.log({ code });
       if (code.join("") === "111111") {
-        router.navigate("/(authenticated)/(tabs)/crypto"); // TODO: change to home
         setCode([]);
+        unlockNavigation();
       } else {
-        // TODO: show error
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-        setCode([]);
+        unlockError();
       }
     }
   }, [code]);
