@@ -111,12 +111,10 @@ function InitalLayout() {
       console.log({ isSignedIn, inAuthGroup, inRootLayout });
       if (isSignedIn && !inAuthGroup && !inRootLayout) {
         // router.replace<any>("/(authenticated)/(tabs)/home"); // TODO: uncomment after doing other navs
-        router.replace<any>("/(authenticated)/(tabs)/crypto"); // TODO: delete once this nav is done
+        router.replace("/(authenticated)/(tabs)/crypto"); // TODO: delete once this nav is done
       } else if (!isSignedIn) {
         // TODO: rewrite this to default to home page once Clerk limit resets in the next month
         router.replace("/");
-
-        // router.replace("/(authenticated)/(modals)/lock"); // TODO: delete once this nav is done
       }
     } catch (e: any) {
       console.warn(e.toString());
@@ -189,6 +187,15 @@ function InitalLayout() {
           animation: "none",
         }}
       ></Stack.Screen>
+      <Stack.Screen
+        name="(authenticated)/(modals)/account"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+          title: "",
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

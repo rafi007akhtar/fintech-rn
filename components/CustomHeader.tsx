@@ -10,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BlurView } from "expo-blur";
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import { Link } from "expo-router";
 
 export default function CustomHeader() {
   return (
@@ -20,9 +21,15 @@ export default function CustomHeader() {
         tint="extraLight"
       >
         <View style={[styles.container]}>
-          <TouchableOpacity style={[styles.roundBtn]}>
-            <Text style={styles.navText}>R</Text>
-          </TouchableOpacity>
+          <Link
+            href="/(authenticated)/(modals)/account"
+            asChild
+            style={[styles.roundBtn]}
+          >
+            <TouchableOpacity>
+              <Text style={styles.navText}>R</Text>
+            </TouchableOpacity>
+          </Link>
 
           <View style={styles.searchSection}>
             <Ionicons
