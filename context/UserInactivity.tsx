@@ -14,8 +14,7 @@ const LOCK_THRESHOLD_MS = 10000;
 export function UserInactivityProvider({ children }: any) {
   const appState = useRef(AppState.currentState);
   const router = useRouter();
-  //   const { isSignedIn } = useAuth(); // TODO: uncomment this once the month passes and Clerk API is back again
-  const isSignedIn = true; // TODO: remove this once the month passes
+  const { isSignedIn } = useAuth();
 
   useEffect(() => {
     const subscription = AppState.addEventListener(

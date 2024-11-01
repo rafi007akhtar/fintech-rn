@@ -110,10 +110,8 @@ function InitalLayout() {
     try {
       console.log({ isSignedIn, inAuthGroup, inRootLayout });
       if (isSignedIn && !inAuthGroup && !inRootLayout) {
-        // router.replace<any>("/(authenticated)/(tabs)/home"); // TODO: uncomment after doing other navs
-        router.replace("/(authenticated)/(tabs)/crypto"); // TODO: delete once this nav is done
+        router.replace<any>("/(authenticated)/(tabs)/home");
       } else if (!isSignedIn) {
-        // TODO: rewrite this to default to home page once Clerk limit resets in the next month
         router.replace("/");
       }
     } catch (e: any) {
